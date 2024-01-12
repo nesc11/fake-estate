@@ -7,6 +7,7 @@ import About from './routes/about';
 import Profile from './routes/profile';
 import SignIn from './routes/sign-in';
 import SignUp from './routes/sign-up';
+import { action as signupAction } from './routes/sign-up';
 
 const router = createBrowserRouter([
 	{
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
 			{
 				path: 'sign-up',
 				element: <SignUp />,
+				action: signupAction,
 			},
 			{
 				path: 'about',
