@@ -8,6 +8,7 @@ import Profile from './routes/profile';
 import SignIn from './routes/sign-in';
 import SignUp from './routes/sign-up';
 import { action as signupAction } from './routes/sign-up';
+import { action as signinAction } from './routes/sign-in';
 
 const router = createBrowserRouter([
 	{
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
 			{
 				path: 'sign-in',
 				element: <SignIn />,
+				action: signinAction,
 			},
 			{
 				path: 'sign-up',
