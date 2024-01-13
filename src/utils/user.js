@@ -18,4 +18,14 @@ const signinUser = async (userData) => {
 	return data;
 };
 
-export { signinUser, signupUser };
+const authWithGoogle = async (userData) => {
+	const res = await fetch('http://localhost:3000/api/auth/google', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(userData),
+	});
+	const data = await res.json();
+	return data;
+};
+
+export { signinUser, signupUser, authWithGoogle };
