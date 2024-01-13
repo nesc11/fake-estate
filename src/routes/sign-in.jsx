@@ -1,21 +1,48 @@
-import { Link, Form, useNavigation, useActionData } from 'react-router-dom';
-import { loginUser } from '../data/users';
-
-export async function action({ request }) {
-	const formData = await request.formData();
-	const userData = Object.fromEntries(formData);
-	const data = await loginUser(userData);
-	return data;
-}
+import { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/user';
+import { signinUser } from '../utils/user';
 
 export default function SignIn() {
+	const [error, setError] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
+
+	const navigate = useNavigate();
+
+	const { user, loadUser } = useContext(UserContext);
 	console.log('sign in');
-	const navigation = useNavigation();
-	const errors = useActionData();
+	console.log(user);
+
+	isLoading && console.log('is Loading');
+	error && console.log('Error');
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setIsLoading(true);
+		const formData = Object.fromEntries(
+			new window.FormData(e.target).entries(),
+		);
+		console.log(formData);
+		try {
+			const result = await signinUser(formData);
+			if (result.success === false) {
+				setError(result.message);
+			} else {
+				// setIsLoading(false);
+				// setError(null);
+				loadUser(result);
+				navigate('/profile');
+			}
+		} catch (error) {
+			setError(error.message);
+		}
+
+		setIsLoading(false);
+	};
 	return (
 		<div className='p-3 max-w-lg mx-auto'>
 			<h1 className='my-7 text-3xl text-center font-semibold'>Sign In</h1>
-			<Form method='post' className='flex flex-col gap-2'>
+			<form onSubmit={handleSubmit} className='flex flex-col gap-2'>
 				<input
 					name='email'
 					className='border p-3 rounded-lg'
@@ -28,24 +55,17 @@ export default function SignIn() {
 					type='password'
 					placeholder='password'
 				/>
-				<button
-					disabled={navigation.state === 'submitting' ? true : false}
-					className='p-3 rounded-lg bg-slate-700 text-white uppercase hover:opacity-95 disabled:opacity-80'
-				>
-					{navigation.state === 'submitting'
-						? 'Loading...'
-						: navigation.state === 'loading'
-							? 'Saved!'
-							: 'Sign in'}
+				<button className='p-3 rounded-lg bg-slate-700 text-white uppercase hover:opacity-95 disabled:opacity-80'>
+					{isLoading ? 'Loading...' : 'Sign in'}
 				</button>
-			</Form>
+			</form>
 			<div className='flex gap-2 mt-5'>
 				<p>Dont have an account yet?</p>
 				<Link className='text-blue-700' to='/sign-up'>
 					Sign up
 				</Link>
 			</div>
-			{errors && <p className='text-red-500'>{errors.message}</p>}
+			{error && <p className='text-red-500'>{error}</p>}
 		</div>
 	);
 }
