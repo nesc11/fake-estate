@@ -7,6 +7,7 @@ import About from './routes/about';
 import Profile from './routes/profile';
 import SignIn from './routes/sign-in';
 import SignUp from './routes/sign-up';
+import PrivateRoute from './routes/private-route';
 import { UserProvider } from './context/user';
 
 const router = createBrowserRouter([
@@ -28,8 +29,13 @@ const router = createBrowserRouter([
 				element: <About />,
 			},
 			{
-				path: 'profile',
-				element: <Profile />,
+				element: <PrivateRoute />,
+				children: [
+					{
+						path: 'profile',
+						element: <Profile />,
+					},
+				],
 			},
 		],
 	},

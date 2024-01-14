@@ -1,7 +1,10 @@
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
+import { UserContext } from '../../context/user';
 
 export default function Header() {
+	const { user } = useContext(UserContext);
 	return (
 		<header className='bg-slate-200 shadow-md'>
 			<div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
@@ -22,7 +25,7 @@ export default function Header() {
 						<FaSearch className='text-slate-500' />
 					</button>
 				</form>
-				<ul className='flex gap-3'>
+				<ul className='flex gap-3 items-center'>
 					<li>
 						<Link
 							className='hidden sm:inline text-slate-700 hover:underline'
@@ -40,8 +43,19 @@ export default function Header() {
 						</Link>
 					</li>
 					<li>
-						<Link className='text-slate-700 hover:underline' to='sign-in'>
-							Sign in
+						<Link
+							className={user ? '' : 'text-slate-700 hover:underline'}
+							to={user ? 'profile' : 'sign-in'}
+						>
+							{user ? (
+								<img
+									className='rounded-lg h-8 w-8 object-cover'
+									src={user.avatar}
+									alt='Profile avatar user'
+								/>
+							) : (
+								'Sign in'
+							)}
 						</Link>
 					</li>
 				</ul>
